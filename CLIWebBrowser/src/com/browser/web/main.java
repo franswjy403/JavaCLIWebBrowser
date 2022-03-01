@@ -27,19 +27,20 @@ public class main {
 		try {
 			String domain = url.split("/")[0];
 			String path = "";
-			if(url.indexOf("/")!=-1) path = url.substring(url.indexOf("/"));
-			else path = "/";
+			if (url.indexOf("/") != -1)
+				path = url.substring(url.indexOf("/"));
+			else
+				path = "/";
 			path.trim();
 			Socket socket = new Socket(domain, 80);
 			BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
 			BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-			
-			String req = "GET "+path+" HTTP/1.1\r\nHost: "+domain+"\r\n\r\n";
+
+			String req = "GET " + path + " HTTP/1.1\r\nHost: " + domain + "\r\n\r\n";
 			System.out.println(req);
 			bos.write(req.getBytes());
 			// bos.write("GET /index.php/berita/lihatBerita\r\n\r\n".getBytes());
 			bos.flush();
-
 
 			int bufferSize = 100;
 			byte[] bResp = new byte[bufferSize];
@@ -51,16 +52,15 @@ public class main {
 				bResp = new byte[bufferSize];
 				c = bis.read(bResp);
 			}
-			
-			String firstLine = resp.split("\n")[0];
-			String status = firstLine.split("\s")[1];
-			System.out.println(status);
-			if(status.equals("200")) System.out.println(resp);
-			else if (status.equals("301")) {
+
+			String[] basket = resp.split("\n");
+			String[] indiv = basket[0].split(" ");
+
+			if (checkError(indiv)) {
 				System.out.println(resp);
-			}
-			else {
-				System.out.println("Error Occured");
+			} else {
+				for (int i = 1; i < indiv.length; i++)
+					System.out.print(indiv[i] + ' ');
 			}
 
 			socket.close();
@@ -69,6 +69,14 @@ public class main {
 			// TODO Auto-generated catch block
 			System.out.println("There is an error occured");
 			e.printStackTrace();
+		}
+	}
+
+	public static boolean checkError(String[] ind) {
+		if (ind[1].charAt(0) == '2') {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
