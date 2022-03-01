@@ -54,7 +54,16 @@ public class main {
 				c = bis.read(bResp);
 			}
 
-			System.out.println(resp);
+			String[] basket = resp.split("\n");
+			String[] indiv = basket[0].split(" ");
+			   
+			if(checkError(indiv)) {
+				System.out.println(resp);
+			}
+			else {
+				for (int i = 1; i<indiv.length; i++)
+				System.out.print(indiv[i]+' ');
+			}
 
 			socket.close();
 
@@ -64,5 +73,14 @@ public class main {
 			e.printStackTrace();
 		}
 	}
+	
+	 public static boolean checkError(String[] ind) {
+		 if(ind[1].charAt(0) == '2') {
+			 return true;
+		 }
+		 else {
+			 return false;
+		 }
+	 }
 
 }
