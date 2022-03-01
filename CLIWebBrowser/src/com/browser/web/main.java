@@ -25,17 +25,23 @@ public class main {
 
 	public static void getWebsite(String url) {
 		try {
-			Socket socket = new Socket(url, 80);
+			String domain = url.split("/")[0];
+			String path = "";
+			if(url.indexOf("/")!=-1) path = url.substring(url.indexOf("/"));
+			else path = "/";
+			path.trim();
+			System.out.println(domain);
+			System.out.println(path);
+			Socket socket = new Socket(domain, 80);
 			BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
 			BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-			System.out.println("1");
-			String req = "GET / HTTP/1.1\r\nHost: "+url+"\r\n\r\n";
+			
+			String req = "GET "+path+" HTTP/1.1\r\nHost: "+domain+"\r\n\r\n";
 			System.out.println(req);
 			bos.write(req.getBytes());
 			// bos.write("GET /index.php/berita/lihatBerita\r\n\r\n".getBytes());
 			bos.flush();
 
-			System.out.println("2");
 
 			int bufferSize = 100;
 			byte[] bResp = new byte[bufferSize];
@@ -48,9 +54,7 @@ public class main {
 				c = bis.read(bResp);
 			}
 
-			System.out.println("3");
 			System.out.println(resp);
-			System.out.println(4);
 
 			socket.close();
 
