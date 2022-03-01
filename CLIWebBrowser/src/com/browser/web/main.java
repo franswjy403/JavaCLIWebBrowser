@@ -30,8 +30,6 @@ public class main {
 			if(url.indexOf("/")!=-1) path = url.substring(url.indexOf("/"));
 			else path = "/";
 			path.trim();
-			System.out.println(domain);
-			System.out.println(path);
 			Socket socket = new Socket(domain, 80);
 			BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
 			BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
@@ -53,8 +51,17 @@ public class main {
 				bResp = new byte[bufferSize];
 				c = bis.read(bResp);
 			}
-
-			System.out.println(resp);
+			
+			String firstLine = resp.split("\n")[0];
+			String status = firstLine.split("\s")[1];
+			System.out.println(status);
+			if(status.equals("200")) System.out.println(resp);
+			else if (status.equals("301")) {
+				System.out.println(resp);
+			}
+			else {
+				System.out.println("Error Occured");
+			}
 
 			socket.close();
 
