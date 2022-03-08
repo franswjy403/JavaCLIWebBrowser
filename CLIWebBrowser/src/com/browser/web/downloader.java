@@ -1,5 +1,5 @@
 package com.browser.web;
 
-public class downloader {
-
+public class downloader extends Thread {
+	
 }
