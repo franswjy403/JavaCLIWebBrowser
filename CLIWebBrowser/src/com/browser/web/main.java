@@ -31,13 +31,17 @@ public class main {
 		public String route;
 		public String param1;
 		public String param2;
+		public String param3;
+		public String token;
 		public String cookie;
 		
-		public loginDetails(String d, String p1, String p2) {
+		public loginDetails(String d, String p1, String p2, String p3, String token) {
 			// TODO Auto-generated constructor stub
 			this.route = d;
 			this.param1 = p1;
 			this.param2 = p2;
+			this.param3 = p3;
+			this.token = token;
 		}
 	}
 
@@ -107,7 +111,8 @@ public class main {
 					System.out.println(routeLogin.param2+": ");
 					String param2 = input.nextLine();
 					
-					String loginParams = routeLogin.cookie + "\r\n"+routeLogin.param1.toLowerCase()+"="+param1+"&"+routeLogin.param2.toLowerCase()+"="+param2;
+//					String loginParams = routeLogin.cookie + "\r\n"+routeLogin.param1.toLowerCase()+"="+param1+"&"+routeLogin.param2.toLowerCase()+"="+param2;
+					String loginParams = routeLogin.param1.toLowerCase()+"="+param1+"&"+routeLogin.param2.toLowerCase()+"="+param2+"&"+routeLogin.param3+"="+routeLogin.token;
 					respo = getWebsite(route, false, loginParams, true);
 				}
 				
@@ -182,6 +187,8 @@ public class main {
 		String destination = null;
 		String param1 = null;
 		String param2 = null;
+		String param3 = null;
+		String token = null;
 		for(int i = 0;i<basket.length;i++) {
 			if(basket[i].contains("<form") && basket[i].contains("method=\"POST\"")) {
 				int start = basket[i].indexOf("action=\"")+8;
@@ -201,8 +208,15 @@ public class main {
 					&& (basket[i].contains("name=\"password\"") && basket[i].contains("type=\"password\""))) {
 				param2 = "Password";
 			}
+			if(basket[i].contains("<input") 
+					&& (basket[i].contains("name=\"_token\"") && basket[i].contains("type=\"hidden\""))) {
+				param3 = "_token";
+				int s = basket[i].indexOf("value=\"")+7;
+				int e = basket[i].indexOf('"', s);
+				token = basket[i].substring(s, e);
+			}
 		}
-		loginDetails loginD = new loginDetails(destination, param1, param2);
+		loginDetails loginD = new loginDetails(destination, param1, param2, param3, token);
 		return loginD;
 	}
 	
